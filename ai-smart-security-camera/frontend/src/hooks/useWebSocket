@@ -1,1 +1,18 @@
+import { useEffect, useState } from "react";
 
+export default function useWebSocket(url) {
+  const [detections, setDetections] = useState([]);
+
+  useEffect(() => {
+    const ws = new WebSocket(url);
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setDetections(data.detections);
+    };
+
+    return () => ws.close();
+  }, [url]);
+
+  return detections;
+}
